@@ -1,0 +1,58 @@
+<?php
+class Categorymodel extends CI_Model
+{
+    function __construct()
+    {
+        parent::__construct();
+         $this->load->database();
+        $this->table_name = 'category';
+    }
+    function add($data){
+        if(!empty($data)){
+          unset($data['sbt']);
+           $this->db->insert($this->table_name,$data);
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+           //echo $this->db->last_query(); die;
+        }
+    }
+   function edit($id,$data){
+        if(!empty($data) && $id!=''){
+          unset($data['sbt']);
+          $this->db->where('id',$id);
+          return $this->db->update($this->table_name,$data);
+           //echo $this->db->last_query(); die;
+        }
+    }
+    function fetch_details($id){
+        if($id!=''){
+           $this->db->select('*');
+           $this->db->where('id',$id);
+           $query = $this->db->get($this->table_name);
+           return $query->row();  
+           
+          
+        }
+    }
+   function get_total_records(){
+       return $query = $this->db->count_all_results($this->table_name);
+    }
+   function get_contents($start, $limit){
+       
+       $this->db->select('*');
+       $this->db->order_by($this->table_name.".id", "desc");
+      
+       $query = $this->db->get($this->table_name);
+       return $query->result();
+    }
+  function deleteCategory($id){
+       $this->db->where('id', $id);
+       $this->db->delete($this->table_name);
+    }
+   
+   function getAllItems()
+    {
+        $query = $this->db->get('item');
+        return $query->result();
+    }
+}   
